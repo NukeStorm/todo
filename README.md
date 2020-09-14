@@ -28,6 +28,7 @@
   - post addTodo (노드 추가)
   - delete todo (노드 삭제)
   - put todo (내용, 타입 변경)
+  - post addColumn (칼럼 추가)
 - Tables
   - User
     - id
@@ -38,6 +39,11 @@
     - content
     - time
     - user_id (작성한 유저의 id)
+  - Log
+    - id
+    - content
+    - time
+    - user_id
 
 ### 1일차
 
