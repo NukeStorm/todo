@@ -1,14 +1,16 @@
-var express = require("express");
-var router = express.Router();
+/* eslint-disable no-unused-vars */
+const express = require('express');
+
+const router = express.Router();
 
 /* GET home page. */
-router.get("/", function (req, res, next) {
-  res.render("index", { title: "test" });
+router.get('/', (req, res, next) => {
+  res.render('index', { title: 'test' });
 });
 
 /* GET home page. */
-router.get("/", function (req, res, next) {
-  res.render("index", { title: "test" });
+router.get('/', (req, res, next) => {
+  res.render('todo.html', { title: 'test' });
 });
 
 module.exports = router;
