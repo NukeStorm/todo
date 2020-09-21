@@ -66,6 +66,14 @@ nav {
 
 }
 
+/*todo card추가 버튼 css*/
+.add-todo {
+  background-color: Transparent;
+  background-repeat: no-repeat;
+  border: none;
+  cursor: pointer;
+  outline: none;
+}
 
 
 /*todo카드*/
