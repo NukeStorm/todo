@@ -66,8 +66,8 @@ export class TodoContainer extends EventTarget {
     node.addEventListener('drop', (e) => {
       const data = e.dataTransfer.getData('text/plain');
 
-      const todoObj = e.dataTransfer.getData('todo/obj');
-      console.dir(todoObj, { depth: null });
+      // const todoObj = e.dataTransfer.getData('todo/obj');
+      //console.dir(todoObj, { depth: null });
 
       const board = document.querySelector('.board');
       const source = board.querySelector(`div[card-id="${data}"]`);
