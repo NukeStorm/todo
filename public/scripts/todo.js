@@ -14,11 +14,26 @@ export class Todo {
     this.node = null;
   }
 
-  static dragstartHandler(ev) {
+  setHandler(container) {
+    this.node.addEventListener('dragstart', (e) => Todo.dragstartHandler(e, container));
+    this.node.addEventListener('drop', Todo.dropHandler);
+    this.node.addEventListener('dragover', Todo.dragoverHandler);
+    this.node.querySelector('.remove').addEventListener('click', (e) => {
+      const parent = node.parentNode;
+      console.log(container);
+      parent.removeChild(this.node);
+    });
+  }
+
+  static dragstartHandler(ev, parent) {
     // 데이터 전달 객체에 대상 요소의 id를 추가합니다.
+    console.log('parent node :', parent.todomap);
+
+    ev.dataTransfer.setData('todo/obj', parent.todomap.get(ev.target.getAttribute('card-id')));
     ev.dataTransfer.setData('text/plain', ev.target.getAttribute('card-id'));
     // eslint-disable-next-line no-param-reassign
     ev.dataTransfer.dropEffect = 'move';
+    ev.target.style.opacity = '0.5';
   }
 
   static dragoverHandler(ev) {
@@ -28,12 +43,13 @@ export class Todo {
   }
 
   static dropHandler(ev) {
-    ev.preventDefault();
+    console.log('drop card');
+    ev.stopPropagation();
     // 대상의 id를 가져와 대상 DOM에 움직인 요소를 추가합니다.
 
     let { target } = ev;
-
-    if (target.className === 'todo-content' || target.className === 'todo-title') {
+    console.log('target card', target);
+    if (target.className === 'todo-content' || target.className === 'todo-title' || target.className === 'todo-author') {
       target = target.parentNode;
     }
 
@@ -42,21 +58,30 @@ export class Todo {
 
       const data = ev.dataTransfer.getData('text/plain');
 
-      const board = target.parentNode;
-      const soruce = board.querySelector(`div[card-id="${data}"]`);
-      const clone = soruce.cloneNode(true);
+      //const board = target.parentNode;
+      const board = document.querySelector('.board');
+      const container = target.parentNode;
+      const source = board.querySelector(`div[card-id="${data}"]`);
+      console.log(source);
+      const clone = source.cloneNode(true);
       const target_clone = target.cloneNode(true);
 
-      board.replaceChild(clone, target);
-      board.replaceChild(target_clone, soruce);
+      if (target.getAttribute('card-id') !== source.getAttribute('card-id')) {
+        container.replaceChild(clone, target);
+        clone.style.opacity = '1.0';
+        container.replaceChild(target_clone, source);
 
-      clone.addEventListener('dragstart', Todo.dragstartHandler);
-      clone.addEventListener('drop', Todo.dropHandler);
-      clone.addEventListener('dragover', Todo.dragoverHandler);
+        clone.addEventListener('dragstart', Todo.dragstartHandler);
+        clone.addEventListener('drop', Todo.dropHandler);
+        clone.addEventListener('dragover', Todo.dragoverHandler);
 
-      target_clone.addEventListener('dragstart', Todo.dragstartHandler);
-      target_clone.addEventListener('drop', Todo.dropHandler);
-      target_clone.addEventListener('dragover', Todo.dragoverHandler);
+        target_clone.addEventListener('dragstart', Todo.dragstartHandler);
+        target_clone.addEventListener('drop', Todo.dropHandler);
+        target_clone.addEventListener('dragover', Todo.dragoverHandler);
+      } else {
+        console.log('same', source);
+        source.style.opacity = '1.0';
+      }
     }
   }
 
@@ -75,15 +100,6 @@ export class Todo {
       <div class="todo-author">created by ${this.user_id}</div>
     </div>`;
     const node = Todo.createElementFromHTML(htmlString);
-    node.addEventListener('dragstart', Todo.dragstartHandler);
-    node.addEventListener('drop', Todo.dropHandler);
-    node.addEventListener('dragover', Todo.dragoverHandler);
-
-    node.querySelector('.remove').addEventListener('click', (e) => {
-      const parent = node.parentNode;
-      console.log(parent);
-      parent.removeChild(node);
-    });
     this.node = node;
     return node;
   }
