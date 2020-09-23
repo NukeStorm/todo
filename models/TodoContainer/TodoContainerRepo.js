@@ -40,8 +40,8 @@ class TodoContainerRepo {
 
   async updateConainerOrder(id, order) {
     let connection = await this.pool.getConnection();
-    const sql = `UPDATE container SET orderlist = ? WHERE id = ${id};`;
-    const [row, field] = await connection.query(sql, [order]);
+    const sql = `UPDATE container SET orderlist = '${order}' WHERE id = ${id};`;
+    const [row, field] = await connection.query(sql);
     connection.release();
     return row;
   }
