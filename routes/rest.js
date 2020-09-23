@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 const express = require('express');
 const session = require('express-session');
+const Todo = require('../models/Todo/Todo');
 const TodoService = require('../service/TodoService');
 const UserService = require('../service/UserService');
 
@@ -20,7 +21,7 @@ router.get('/api/todo/loadall/:userId', async (req, res, next) => {
 });
 
 /* todo 순서 바뀌었을때 업데이트 요청 */
-/*router.post('/api/todo/move/order', async (req, res, next) => {
+router.post('/api/todo/move/order', async (req, res, next) => {
   let { orderlist } = req.body;
   let containerId = req.body.container_id;
   orderlist = orderlist.split(',').map((n) => parseFloat(n));
@@ -29,12 +30,49 @@ router.get('/api/todo/loadall/:userId', async (req, res, next) => {
   console.log(result);
   res.json({ data: { user: 'hello', pw: 'test' } });
 });
-*/
-/* todo가  container를 바꿨을 때  */
-router.get('/api/todo/move/container', (req, res, next) => {
-  res.json({ data: { user: 'hello', pw: 'test' } });
+
+router.post('/api/todo/add', async (req, res, next) => {
+  try {
+    const { content, date, userId, containerId } = req.body;
+    console.log(content, date, userId, containerId);
+    let newTodo = new Todo(null, null, content, new Date(date));
+    let insertId = await todoService.addTodo(newTodo, userId, containerId);
+    let newTodoObj = await todoService.getTodo(insertId);
+    console.log(newTodoObj);
+    res.json({ data: { obj: newTodoObj } });
+  } catch (e) {
+    res.json({ data: { obj: null } });
+  }
 });
 
+router.put('/api/todo/edit', async (req, res, next) => {
+  try {
+    const { id, content, date, containerId } = req.body;
+    console.log(content, date, id, containerId);
+    let updateTodo = new Todo(id, null, content, new Date(date));
+
+    let result = await todoService.editTodo(updateTodo, containerId);
+    if (!result) throw new Error('no updated');
+
+    let updatedTodo = await todoService.getTodo(id);
+
+    res.json({ data: { obj: updatedTodo } });
+  } catch (e) {
+    console.error(e);
+    res.json({ data: { obj: null } });
+  }
+});
+
+router.post('/api/todo/delete', async (req, res, next) => {
+  try {
+    const { todoId } = req.body;
+    let result = await todoService.removeTodo(todoId);
+    console.log(result);
+    res.json({ data: { result } });
+  } catch (e) {
+    res.json({ data: { result: false } });
+  }
+});
 router.get('/api/user/login/:id/:pw', async (req, res) => {
   const { id, pw } = req.params;
   const sess = req.session;

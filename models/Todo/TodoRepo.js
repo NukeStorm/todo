@@ -9,10 +9,8 @@ class TodRepo {
   async selectTodoById(id) {
     let connection = await this.pool.getConnection();
     console.log(connection);
-    const [rows, field] = await connection.query(
-      `select * from todo where id='${id}'`,
-    );
-    console.log(rows[0].date.getTimezoneOffset());
+    const [rows, field] = await connection.query(`select * from todo where id='${id}'`);
+    console.log(rows[0].date);
 
     let todo = Object.assign(new Todo(), rows[0]);
     await connection.release();
@@ -32,15 +30,14 @@ class TodRepo {
 
   async updateTodo(todoObj, containerId) {
     let connection = await this.pool.getConnection();
-    const sql = `UPDATE todo SET title='${todoObj.title}', content='${
-      todoObj.content
-    }', date='${todoObj.date.toISOString()}', user_id='${
-      todoObj.user_id
-    }' , container_id='${containerId}' WHERE id = '${todoObj.id}';`;
+    const sql = `UPDATE todo SET title='${todoObj.title}', content='${todoObj.content}', date='${todoObj.date
+      .toISOString()
+      .slice(0, 19)
+      .replace('T', ' ')}' , container_id='${containerId}' WHERE id = '${todoObj.id}';`;
     console.log(sql);
     const [row] = await connection.query(sql);
     await connection.release();
-    const result = row.insertId;
+    const result = row;
     return result;
   }
 
@@ -50,7 +47,8 @@ class TodRepo {
     console.log(sql);
     const [row] = await connection.query(sql);
     await connection.release();
-    const result = row.insertId;
+    console.log(row);
+    const result = row.affectedRows;
     return result;
   }
 }
