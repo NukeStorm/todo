@@ -26,10 +26,9 @@ export class Todo {
   }
 
   static dragstartHandler(ev, parent) {
-    // 데이터 전달 객체에 대상 요소의 id를 추가합니다.
-    console.log('parent node :', parent.todomap);
+    // 데이터 전달 객체에 대상 요소의 id를 추가합니다
 
-    ev.dataTransfer.setData('todo/obj', parent.todomap.get(ev.target.getAttribute('card-id')));
+    //ev.dataTransfer.setData('todo/obj', parent.todomap.get(ev.target.getAttribute('card-id')));
     ev.dataTransfer.setData('text/plain', ev.target.getAttribute('card-id'));
     // eslint-disable-next-line no-param-reassign
     ev.dataTransfer.dropEffect = 'move';
