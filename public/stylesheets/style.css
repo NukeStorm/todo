@@ -56,6 +56,7 @@ nav {
   background-color: #ececece5;
   border-radius: 1em;
   border: none;
+  padding-bottom: 50px;
 }
 
 .container-title {
@@ -79,19 +80,35 @@ nav {
 /*todo카드*/
 .todo-card {
 
-  width: inherit;
+  width: 250px;
   margin: 10px;
   border-radius: 0.5em;
   height: auto;
   border: 1px solid #e1e4e8 !important;
   background-color: white;
+
+
+
+}
+
+.todo-body {
+  display: flex;
+
 }
 
 /*todo카드 내용부분*/
 .todo-content {
-  display: flex;
-  justify-content: space-between;
+  display: block;
+  width: 200px;
+  white-space: normal !important;
   margin: 5px;
+  word-break: break-all;
+  word-wrap: break-word;
+}
+
+.btn-area {
+  display: flex;
+  height: fit-content;
 }
 
 /*todocard 삭제버튼*/
@@ -105,7 +122,75 @@ nav {
 
 }
 
+.edit-btn {
+
+  border: none;
+  background-color: Transparent;
+  cursor: pointer;
+  outline: none;
+}
+
 /*todo작성자 부분*/
 .todo-author {
   margin: 5px;
+}
+
+
+/* todo 추가 form */
+.form-add-todo {
+  margin: 5px;
+}
+
+.add-btn {
+  background-color: mediumseagreen;
+  margin-left: 5px;
+  margin-right: 5px;
+  border: none;
+}
+
+.edit-submit-btn {
+  background-color: dodgerblue;
+  margin-left: 5px;
+  margin-right: 5px;
+  border: none;
+}
+
+.cancel-btn {
+  margin-left: 5px;
+  margin-right: 5px;
+  border: none;
+  background-color: indianred;
+}
+
+.form-btn-area {
+  margin: 5px;
+}
+
+.form-btn-area .add-btn {
+  width: 45%;
+}
+
+.form-btn-area .cancel-btn {
+  width: 45%;
+}
+
+.form-btn-area .edit-submit-btn {
+  width: 45%;
+}
+
+.textarea-todo {
+  width: 95%;
+  margin: 5px;
+  height: 50px;
+  border-radius: 0.5em;
+  overflow: scroll;
+  overflow-x: hidden;
+  resize: vertical;
+  border: 1px solid #e1e4e8 !important;
+}
+
+
+
+.hidden {
+  display: none;
 }
