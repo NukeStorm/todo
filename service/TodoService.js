@@ -15,9 +15,11 @@ class TodoService {
     let containerArr = containerList.map(async (container) => {
       let todoData = await this.containerRepo.selectContainerTodoListById(container.id);
 
+      console.log(todoData);
+
       todoData = todoData.map((row) => Object.assign(new Todo(), row));
 
-      let todoContainer = new TodoContainer(container.id, container.name, todoData);
+      let todoContainer = new TodoContainer(container.id, container.name, todoData, container.orderlist);
 
       return todoContainer;
     });
@@ -50,6 +52,12 @@ class TodoService {
     }
   }
 
+  async editTodo(todoObj, containerId) {
+    let res = await this.todoRepo.updateTodo(todoObj, containerId);
+    if (res.changedRows === 1) return true;
+    return false;
+  }
+
   async changeTodoOrder(todocontainerId, orderlist) {
     let result = await this.containerRepo.updateConainerOrder(todocontainerId, orderlist);
 
@@ -58,7 +66,8 @@ class TodoService {
 
   async removeTodo(todoId) {
     let result = await this.todoRepo.deleteTodo(todoId);
-    return result;
+    if (result >= 1) return true;
+    return false;
   }
 }
 
