@@ -43,16 +43,35 @@ export class TodoContainer extends EventTarget {
     ev.dataTransfer.dropEffect = 'move';
   }
 
+  getCurrentOrderList() {
+    const cardlistNode = this.node.querySelector('.cardlist');
+    let cardlist = cardlistNode.querySelectorAll('.todo-card');
+    let orderlist = [];
+    cardlist.forEach((todoNode) => {
+      orderlist.push(parseInt(todoNode.getAttribute('card-id'), 10));
+    });
+    console.log(orderlist);
+    return orderlist;
+  }
+
   // todo container node를 생성, this.node를 통해 이 dom node를 조작 가능
   render() {
     const cnt = this.todolist.length;
     const title = this.name;
-    const htmlString = `<div class="todo-container">
+    const htmlString = `<div class="todo-container" container-id="${this.id}">
         <div class="container-title">
             <div class= "card-num">${cnt}</div>
             <div>${title}</div>
             <div><button class="add-todo">+</button>X</div>
          </div>
+         
+         <div class="form-add-todo hidden">
+            <textarea class="textarea-todo" name="content"  placehold="입력"></textarea>
+           <div class="form-btn-area">
+            <button class="add-btn">ADD</button><button class="cancel-btn">CANCEL</button>
+            </div>
+         </div>
+
          <div class="cardlist"></div>
     </div>`;
 
@@ -61,14 +80,21 @@ export class TodoContainer extends EventTarget {
     this.todolist.forEach((todo) => {
       this.node.querySelector('.cardlist').appendChild(todo.node);
     });
+
+    const cardlistNode = this.node.querySelector('.cardlist');
+
+    cardlistNode.addEventListener('DOMSubtreeModified', (e) => {
+      e.preventDefault();
+      console.log(e.target, 'cardlist affected');
+      const todoCntNode = this.node.querySelector('.card-num');
+
+      todoCntNode.innerText = cardlistNode.querySelectorAll('.todo-card').length;
+    });
+
     node.addEventListener('dragover', TodoContainer.dragoverHandler);
 
     node.addEventListener('drop', (e) => {
       const data = e.dataTransfer.getData('text/plain');
-
-      // const todoObj = e.dataTransfer.getData('todo/obj');
-      //console.dir(todoObj, { depth: null });
-
       const board = document.querySelector('.board');
       const source = board.querySelector(`div[card-id="${data}"]`);
 
@@ -82,13 +108,60 @@ export class TodoContainer extends EventTarget {
 
       source.style.opacity = '1.0';
     });
+
+    node.querySelector('.cancel-btn').addEventListener('click', (e) => {
+      const textarea = node.querySelector('.textarea-todo');
+      textarea.value = '';
+      let formNode = node.querySelector('.form-add-todo');
+      formNode.classList.toggle('hidden');
+    });
     // 추가버튼을 누를때 발생하는 이벤트 핸들러 추가
+    node.querySelector('.add-btn').addEventListener('click', (e) => {
+      const textarea = node.querySelector('.textarea-todo');
+      const content = textarea.value;
+
+      //현재 브라우저 전역변수  userId :로그인된 userId
+      let loginId = document.loginId;
+      const containerId = this.id;
+
+      const payload = {
+        content,
+        date: new Date(),
+        userId: loginId,
+        containerId,
+      };
+
+      fetch(`/api/todo/add`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+        },
+        body: JSON.stringify(payload),
+        credentials: 'same-origin',
+      })
+        .then((e) => e.json())
+        .then((e) => {
+          let data = e.data;
+          console.log(data);
+
+          if (data.obj) {
+            const newTodo = Object.assign(new Todo(), data.obj);
+            newTodo.render();
+            Todo.setHandler(newTodo.node);
+            document.todoMap.set(newTodo.id, newTodo);
+            this.node.querySelector('.cardlist').prepend(newTodo.node);
+
+            let formNode = this.node.querySelector('.form-add-todo');
+            formNode.classList.toggle('hidden');
+          } else {
+            alert('추가도중 오류 발생');
+          }
+        });
+    });
+
     node.querySelector('.add-todo').addEventListener('click', (e) => {
-      // 현재는 테스트용으로 샘플 todo card를 생성하여 todocontainer에 삽입
-      // TODO:아래 코드를 삭제하고 todo card 생성하고 추가하는 코드 구현
-      const todo = new Todo(Math.floor(Math.random() * 2000 + 1), null, `테스트${Math.floor(Math.random() * 2000 + 1)}`, new Date(), 'shin');
-      todo.render(this.node);
-      this.node.querySelector('.cardlist').appendChild(todo.node);
+      let formNode = node.querySelector('.form-add-todo');
+      formNode.classList.toggle('hidden');
     });
 
     return node;
