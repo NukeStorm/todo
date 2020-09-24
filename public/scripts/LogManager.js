@@ -95,10 +95,12 @@ export class LogManager extends EventTarget {
   }
 
   rendermsg(logmsg, timestamp) {
+    let dateStr = new Date(timestamp).format('yyyy-MM-dd(KS) HH:mm:ss');
+
     const htmlstr = `
     <div class="log-msg">
     <div>${logmsg}<div>
-    <div>${timestamp}</div>
+    <div>${dateStr}</div>
     </div>`;
     const node = LogManager.createElementFromHTML(htmlstr);
     return node;
