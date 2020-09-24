@@ -238,6 +238,8 @@ export class TodoContainer extends EventTarget {
 
     node.querySelector('.add-todo').addEventListener('click', (e) => {
       let formNode = node.querySelector('.form-add-todo');
+      const textArea = node.querySelector('.textarea-todo');
+      textArea.value = '';
       formNode.classList.toggle('hidden');
     });
 
