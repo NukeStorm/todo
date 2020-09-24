@@ -43,7 +43,7 @@
 }
 
 .log-menu div {
-    font-size: 22px;
+
     margin-top: auto;
     margin-bottom: auto;
 }
@@ -52,5 +52,5 @@
     border-top: solid 1px grey;
     margin: 5px;
     background-color: transparent;
-    font-size: 12px;
+
 }
