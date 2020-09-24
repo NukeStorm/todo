@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/stylesheets/style.css">
     <link rel="stylesheet" href="/stylesheets/modal.css">
+    <link rel="stylesheet" href="/stylesheets/sidebar.css">
     <title>Document</title>
 </head>
 
@@ -29,38 +30,38 @@
 
     <nav class="header">
         <h3>Todo</h3>
-        <h3>메뉴</h3>
+        <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776; </span>
     </nav>
-    <div class="board">
+
+
+    <div id="mySidenav" class="sidenav">
+        <div class="log-menu">
+            <div><span>&#9776;menu</span></div>
+            <div><a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a></div>
+        </div>
+        <div>
+            <h3>log history</h2>
+        </div>
+        <div class="log-container">
+
+        </div>
     </div>
+
+    <div class="board">
+
+    </div>
+
 </body>
 
 <script type="module" src="/scripts/app.js"></script>
 <script>
-    /*
-    코드 참고 용도로 기록 , 삭제 예정
-    
-    class MyClass extends EventTarget {
-        doSomething() {
-            this.dispatchEvent(new Event('something'));
-        }
+    function openNav() {
+        document.getElementById("mySidenav").style.width = "3 50px";
     }
 
-    const instance = new MyClass();
-    instance.addEventListener('something', (e) => {
-        console.log('Instance fired "something".', e);
-    });
-
-
-    let cardlist = document.querySelectorAll(".todo-card");
-    cardlist.forEach(card => {
-
-        card.addEventListener("click", (e) => {
-            instance.doSomething();
-            console.log(e.target)
-        });
-    });
-    */
+    function closeNav() {
+        document.getElementById("mySidenav").style.width = "0";
+    }
 </script>
 
 </html>

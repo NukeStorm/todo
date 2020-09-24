@@ -1,18 +1,21 @@
 const pool = require('../../DB/mysqPool');
 const Todo = require('./Todo');
 
-class TodRepo {
+class TodoRepo {
   constructor() {
     this.pool = pool;
   }
 
   async selectTodoById(id) {
     let connection = await this.pool.getConnection();
-    console.log(connection);
-    const [rows, field] = await connection.query(`select * from todo where id='${id}'`);
-    console.log(rows[0].date);
 
+    const [rows, field] = await connection.query(`select * from todo where id='${id}'`);
     let todo = Object.assign(new Todo(), rows[0]);
+
+    todo.date = todo.date.replace(' ', 'T');
+    todo.date += '.000Z';
+    todo.date = new Date(todo.date);
+
     await connection.release();
 
     return todo;
@@ -30,11 +33,12 @@ class TodRepo {
 
   async updateTodo(todoObj, containerId) {
     let connection = await this.pool.getConnection();
+
     const sql = `UPDATE todo SET title='${todoObj.title}', content='${todoObj.content}', date='${todoObj.date
       .toISOString()
       .slice(0, 19)
       .replace('T', ' ')}' , container_id='${containerId}' WHERE id = '${todoObj.id}';`;
-    console.log(sql);
+
     const [row] = await connection.query(sql);
     await connection.release();
     const result = row;
@@ -44,26 +48,13 @@ class TodRepo {
   async deleteTodo(todoId) {
     let connection = await this.pool.getConnection();
     const sql = `Delete from todo where id='${todoId}';`;
-    console.log(sql);
+
     const [row] = await connection.query(sql);
     await connection.release();
-    console.log(row);
+
     const result = row.affectedRows;
     return result;
   }
 }
 
-module.exports = TodRepo;
-/*
-let repo = new TodRepo();
-repo.selectTodoById(1).then((res) => {
-  console.log(res);
-
-  repo
-    .selectTodoById(2)
-    .then((res2) => console.log(res2))
-    .then(() => {
-      repo.pool.end();
-    });
-});
-*/
+module.exports = TodoRepo;

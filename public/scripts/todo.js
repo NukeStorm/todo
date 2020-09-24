@@ -19,7 +19,9 @@ export class Todo {
     const parent = node.parentNode;
 
     let todoId = node.getAttribute('card-id');
-
+    const sourceTodoContainerId = parseInt(node.closest('.todo-container').getAttribute('container-id'), 10);
+    const soruceTodoContainer = document.containerMap.get(sourceTodoContainerId);
+    parent.removeChild(node);
     fetch(`/api/todo/delete`, {
       method: 'POST',
       headers: {
@@ -32,9 +34,25 @@ export class Todo {
       .then((e) => {
         let data = e.data;
 
+        let todo = Object.assign(new Todo(), document.todoMap.get(parseInt(todoId, 10)));
+        todo.date = new Date();
         if (data.result) {
+          const logEvent = new Event('todoremove');
+          logEvent.log = {
+            userid: document.loginId,
+            action: 'remove',
+            todo: todo,
+            fromCotainerId: null,
+            toContainerId: null,
+          };
+          document.logManager.dispatchEvent(logEvent);
+
           document.todoMap.delete(parseInt(todoId, 10));
-          parent.removeChild(node);
+
+          //삭제되었으면 todo 순서변경 이벤트 발생
+          soruceTodoContainer.dispatchEvent(new Event('todomoved'));
+
+          //todomoved
         } else {
           alert('삭제 도중 오류 발생');
         }
@@ -66,7 +84,6 @@ export class Todo {
   static dragstartHandler(ev) {
     // 데이터 전달 객체에 대상 요소의 id를 추가
 
-    //ev.dataTransfer.setData('todo/obj', parent.todomap.get(ev.target.getAttribute('card-id')));
     ev.dataTransfer.setData('text/plain', ev.target.getAttribute('card-id'));
     // eslint-disable-next-line no-param-reassign
     ev.dataTransfer.dropEffect = 'move';
@@ -80,17 +97,13 @@ export class Todo {
   }
 
   static dropHandler(ev) {
-    console.log('drop card');
     ev.stopPropagation();
     // 대상의 id를 가져와 대상 DOM에 움직인 요소를 추가합니다.
 
     let { target } = ev;
 
-    console.log('target card', target);
-
     if (target.className != 'todo-card') {
       target = target.closest('.todo-card');
-      console.log('closest', target);
     }
 
     if (target.className === 'todo-card') {
@@ -98,30 +111,76 @@ export class Todo {
 
       const sourceId = parseInt(ev.dataTransfer.getData('text/plain'), 10);
       const targetId = parseInt(target.getAttribute('card-id'), 10);
-      console.log(sourceId, targetId);
 
       const board = document.querySelector('.board');
       const source = document.todoMap.get(sourceId).node;
       const targetContainer = target.parentNode;
       const sourceContainer = source.parentNode;
 
-      console.log('source', source);
+      const sourceTodoContainerId = parseInt(source.closest('.todo-container').getAttribute('container-id'), 10);
+      const targetTodoContainerId = parseInt(target.closest('.todo-container').getAttribute('container-id'), 10);
+
+      const soruceTodoContainer = document.containerMap.get(sourceTodoContainerId);
+      const targetTodoContainer = document.containerMap.get(targetTodoContainerId);
 
       const sourceClone = source.cloneNode(true);
       const targetClone = target.cloneNode(true);
 
       if (target.getAttribute('card-id') !== source.getAttribute('card-id')) {
-        console.log('targetcontainer ', targetContainer);
-        console.log('sorucecontainer ', sourceContainer);
         if (targetContainer == sourceContainer) {
+          //컨테이너 내 이동인 경우
           targetContainer.replaceChild(sourceClone, target);
           sourceClone.style.opacity = '1.0';
           targetContainer.replaceChild(targetClone, source);
+          targetTodoContainer.dispatchEvent(new Event('todomoved'));
+          // document.logManager.dispatchEvent(new Event('todomove'));
         } else {
           targetContainer.appendChild(source);
           targetContainer.replaceChild(sourceClone, target);
           sourceClone.style.opacity = '1.0';
+
           targetContainer.replaceChild(targetClone, source);
+
+          // 다른 컨테이너로 이동한경우 DB에 반영
+          // /api/todo/move/container
+
+          const todoId = sourceId;
+          const containerId = targetTodoContainerId;
+          const payload = {
+            todoId,
+            containerId,
+          };
+
+          fetch('/api/todo/move/container', {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json; charset=utf-8',
+            },
+            body: JSON.stringify(payload),
+            credentials: 'same-origin',
+          })
+            .then((e) => e.json())
+            .then((e) => {
+              let data = e.data;
+              soruceTodoContainer.dispatchEvent(new Event('todomoved'));
+              targetTodoContainer.dispatchEvent(new Event('todomoved'));
+
+              let todo = document.todoMap.get(todoId);
+              const logEvent = new Event('todomove');
+              logEvent.log = {
+                userid: document.loginId,
+                action: 'move',
+                todo: todo,
+                fromCotainerId: sourceTodoContainerId,
+                toContainerId: targetTodoContainerId,
+              };
+
+              document.logManager.dispatchEvent(logEvent);
+
+              if (!data.result) {
+                alert('컨테이너간 todo 카드 이동이 저장되지 않았습니다.');
+              }
+            });
         }
 
         Todo.setHandler(sourceClone);
@@ -135,7 +194,6 @@ export class Todo {
         targetTodo.node = targetClone;
         document.todoMap.set(targetId, targetTodo);
       } else {
-        console.log('same', source);
         source.style.opacity = '1.0';
       }
     }
@@ -148,10 +206,10 @@ export class Todo {
   }
 
   render() {
-    const htmlString = `<div class="todo-card" draggable="true" card-id=${this.id}>
+    const htmlString = `<div class="todo-card" tabindex="-1" draggable="true"id="card-${this.id}" card-id=${this.id}>
     <div class="todo-body" >
     <div class="todo-content">
-    ${this.content}
+    ${this.content} 
     </div>
     <div class="btn-area">
     <button class="edit-btn">edit</btn><button class="remove">x</button>
