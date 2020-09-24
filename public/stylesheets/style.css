@@ -91,6 +91,10 @@ nav {
 
 }
 
+.todo-card:focus {
+  border: 1px solid skyblue !important;
+}
+
 .todo-body {
   display: flex;
 
