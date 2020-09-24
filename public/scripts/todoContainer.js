@@ -73,9 +73,9 @@ export class TodoContainer extends EventTarget {
     const title = this.name;
     const htmlString = `<div class="todo-container" container-id="${this.id}">
         <div class="container-title">
-            <div class= "card-num">${cnt}</div>
+            <div class= "card-num"><div>${cnt}</div></div>
             <div>${title}</div>
-            <div><button class="add-todo">+</button>X</div>
+            <div><button class="add-todo">+</button></div>
          </div>
          
          <div class="form-add-todo hidden">
