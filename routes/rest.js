@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 const express = require('express');
 const session = require('express-session');
+const cors = require('cors');
 const Todo = require('../models/Todo/Todo');
 const LogHistory = require('../models/LogHistory/loghistory');
 
@@ -12,6 +13,13 @@ const router = express.Router();
 const todoService = new TodoService();
 const userService = new UserService();
 const logService = new LogService();
+
+router.use(
+  cors({
+    credentials: true,
+  }),
+);
+
 /* GET users listing. */
 router.get('/api/user', (req, res, next) => {
   res.json({ data: { user: 'hello', pw: 'test' } });
