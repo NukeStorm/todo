@@ -49,8 +49,8 @@
 }
 
 .log-msg {
-    border: solid 1px grey;
+    border-top: solid 1px grey;
     margin: 5px;
     background-color: transparent;
-
+    font-size: 12px;
 }
