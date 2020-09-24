@@ -34,12 +34,14 @@
 .sidenav h3 {
 
     margin-left: 5px;
+    text-align: center;
 }
 
 .log-menu {
     display: flex;
+    padding: 15px;
     justify-content: space-between;
-    background-color: rgba(255, 255, 255, 0.924);
+    background-color: rgba(128, 128, 128, 0.164)
 }
 
 .log-menu div {
