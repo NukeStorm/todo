@@ -15,11 +15,13 @@ class TodoService {
     let containerArr = containerList.map(async (container) => {
       let todoData = await this.containerRepo.selectContainerTodoListById(container.id);
 
-      console.log(todoData);
+      let orderlist = container.orderlist;
 
+      if (!orderlist) orderlist = [];
+      else orderlist = orderlist.split(',').map((id) => parseInt(id, 10));
       todoData = todoData.map((row) => Object.assign(new Todo(), row));
 
-      let todoContainer = new TodoContainer(container.id, container.name, todoData, container.orderlist);
+      let todoContainer = new TodoContainer(container.id, container.name, todoData, orderlist);
 
       return todoContainer;
     });
@@ -40,16 +42,9 @@ class TodoService {
   }
 
   async moveToContainer(todoId, containerId) {
-    let todoObj = await this.getTodo(todoId).then((todoObj) => {});
-    console.log(todoObj);
-    console.log(containerId);
-
-    try {
-      let res = await this.todoRepo.updateTodo(todoObj, containerId);
-      return res;
-    } catch (e) {
-      console.log(e);
-    }
+    let todoObj = await this.getTodo(todoId);
+    let res = await this.todoRepo.updateTodo(todoObj, containerId);
+    return res.changedRows === 1;
   }
 
   async editTodo(todoObj, containerId) {
@@ -60,8 +55,7 @@ class TodoService {
 
   async changeTodoOrder(todocontainerId, orderlist) {
     let result = await this.containerRepo.updateConainerOrder(todocontainerId, orderlist);
-
-    return result;
+    return result.changedRows === 1;
   }
 
   async removeTodo(todoId) {
@@ -72,4 +66,3 @@ class TodoService {
 }
 
 module.exports = TodoService;
-//console.log(service.getTodo(todo, 'test', 1));
