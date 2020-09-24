@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/stylesheets/style.css">
+    <link rel="stylesheet" href="/stylesheets/modal.css">
+    <link rel="stylesheet" href="/stylesheets/sidebar.css">
+    <title>Document</title>
+</head>
+
+<body>
+    <!-- todo 편집  modal -->
+    <div id="edit_modal" class="modal hidden">
+        <!-- Modal content -->
+        <div class="modal-content">
+
+            <span class="close"
+                onclick="document.getElementById('edit_modal').classList.toggle('hidden')">&times;</span>
+            <div class="form-add-todo">
+                <textarea class="textarea-todo" name="content" placehold="입력"></textarea>
+                <div class="form-btn-area">
+                    <button class="edit-submit-btn">EDIT</button><button class="cancel-btn"
+                        onclick="document.getElementById('edit_modal').classList.toggle('hidden')">CANCEL</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <nav id="navbar" class="header">
+        <h2>Todo</h2>
+        <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776; </span>
+    </nav>
+
+
+    <div id="mySidenav" class="sidenav">
+        <div class="log-menu">
+            <div><span>&#9776;menu</span></div>
+            <div><a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a></div>
+        </div>
+        <div>
+            <h3>log history</h2>
+        </div>
+        <div class="log-container">
+
+        </div>
+    </div>
+
+    <div class="board">
+
+    </div>
+
+</body>
+
+<script type="module" src="/scripts/app.js"></script>
+<script>
+    function openNav() {
+        document.getElementById("mySidenav").style.width = "400px";
+    }
+
+    function closeNav() {
+        document.getElementById("mySidenav").style.width = "0";
+    }
+</script>
+
+</html>

@@ -1,0 +1,235 @@
+body {
+
+  font: 18px "Lucida Grande", Helvetica, Arial, sans-serif;
+  margin: 0px;
+}
+
+a {
+  color: #00B7FF;
+}
+
+/*네비게이션 바*/
+nav {
+  padding-left: 5px;
+  padding-right: 5px;
+  position: fixed;
+  width: 100%;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background: black;
+  color: #f1f1f1;
+  font-weight: bold;
+  top: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+}
+
+nav span {
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-right: 30px;
+  font-size: 40px;
+  cursor: pointer;
+}
+
+nav h2 {
+  margin-top: auto;
+  margin-bottom: auto;
+  font-size: 40px;
+  cursor: pointer;
+}
+
+.content {
+  padding: 5px;
+}
+
+
+/*현재 todolist 보드*/
+.board {
+
+  margin: 10px;
+  margin-top: 70px;
+  overflow-x: auto;
+  display: flex;
+}
+
+/*todo 카드를 담는 컨테이너 */
+.todo-container {
+
+  flex: 0 0 450px;
+  margin: 10px;
+  min-height: 500px;
+  background-color: #ececece5;
+  border-radius: 1em;
+  border: none;
+  padding-bottom: 50px;
+}
+
+.card-num {
+
+  width: 32px;
+  /* margin: auto; */
+  margin-top: 5px;
+  height: 32px;
+  border-radius: 50%;
+  text-align: center;
+  background-color: rgba(209, 213, 218, .5);
+}
+
+.card-num div {
+  margin-top: 4px;
+}
+
+.container-title {
+
+  font-weight: bolder;
+  display: flex;
+  justify-content: space-between;
+  margin: 5px;
+
+
+}
+
+/*todo card추가 버튼 css*/
+.add-todo {
+  background-color: Transparent;
+  background-repeat: no-repeat;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  font-size: 22px;
+  font-weight: bolder;
+}
+
+
+/*todo카드*/
+.todo-card {
+
+  width: 450px;
+  margin: 10px;
+  border-radius: 0.5em;
+  height: auto;
+  border: 1px solid #e1e4e8 !important;
+  background-color: white;
+
+}
+
+.todo-card:focus {
+  border: 1px solid skyblue !important;
+}
+
+.todo-body {
+  display: flex;
+  justify-content: space-between;
+}
+
+/*todo카드 내용부분*/
+.todo-content {
+  display: block;
+  width: 400px;
+  white-space: normal !important;
+  margin: 5px;
+  word-break: break-all;
+  word-wrap: break-word;
+}
+
+.btn-area {
+  display: flex;
+  height: fit-content;
+
+}
+
+/*todocard 삭제버튼*/
+.remove {
+
+  background-color: Transparent;
+  background-repeat: no-repeat;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  font-size: 22px !important;
+  font-weight: bolder;
+}
+
+.edit-btn {
+
+  border: none;
+  background-color: Transparent;
+  cursor: pointer;
+  outline: none;
+  font-size: 18px !important;
+  font-weight: bolder;
+}
+
+/*todo작성자 부분*/
+.todo-author {
+  margin: 5px;
+  font-weight: bolder;
+}
+
+
+/* todo 추가 form */
+.form-add-todo {
+  margin: 5px;
+}
+
+.add-btn {
+  background-color: mediumseagreen;
+  margin-left: 5px;
+  margin-right: 5px;
+  border: none;
+  height: 50px;
+  font-size: inherit;
+  color: white;
+}
+
+.edit-submit-btn {
+  background-color: dodgerblue;
+  margin-left: 5px;
+  margin-right: 5px;
+  border: none;
+}
+
+.cancel-btn {
+  margin-left: 5px;
+  margin-right: 5px;
+  border: none;
+  background-color: indianred;
+  height: 50px;
+  font-size: inherit;
+  color: white;
+}
+
+.form-btn-area {
+  margin: 5px;
+}
+
+.form-btn-area .add-btn {
+  width: 45%;
+}
+
+.form-btn-area .cancel-btn {
+  width: 45%;
+}
+
+.form-btn-area .edit-submit-btn {
+  width: 45%;
+}
+
+.textarea-todo {
+  width: 95%;
+  margin: 5px;
+  height: 50px;
+  border-radius: 0.5em;
+  overflow: scroll;
+  overflow-x: hidden;
+  resize: vertical;
+  border: 1px solid #e1e4e8 !important;
+}
+
+
+
+.hidden {
+  display: none;
+}
