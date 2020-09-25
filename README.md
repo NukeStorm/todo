@@ -9,6 +9,16 @@
 - Client Side Rendering 방식으로 만들면 좋을 것 같다
 - 서버에서는 최소한의 html & js코드가 담긴 페이지만 보내주고 클라이언트에서는 페이지를 새로 요청하지 않고 rest api로만 서버와 통신하여 얻은 데이터를 통해 화면을 변경한다
 
-# 실제 동작 화면
+
+
+# 실제 구현된 TODO 웹서비스 동작 화면
 ![logging](https://user-images.githubusercontent.com/22471977/94179881-22e44e00-fed8-11ea-9df5-a70066882a99.gif)
 ![logging2](https://user-images.githubusercontent.com/22471977/94180535-1dd3ce80-fed9-11ea-835b-de323c986534.gif)
+
+# 배포완료
+- webpack-babel 적용 
+- pm2를 사용하여 express 서버 배포
+
+# 배포 주소 
+http://115.85.180.184:3000/
+
